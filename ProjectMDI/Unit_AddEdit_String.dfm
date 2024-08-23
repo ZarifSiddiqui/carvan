@@ -1,0 +1,69 @@
+object dlg_AddEditString: Tdlg_AddEditString
+  Left = 502
+  Top = 213
+  BorderStyle = bsDialog
+  Caption = 'Add/Edit'
+  ClientHeight = 134
+  ClientWidth = 313
+  Color = 12615680
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = True
+  Position = poScreenCenter
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 16
+  object Bevel1: TBevel
+    Left = 8
+    Top = 8
+    Width = 297
+    Height = 81
+    Shape = bsFrame
+  end
+  object Label1: TLabel
+    Left = 16
+    Top = 21
+    Width = 37
+    Height = 16
+    Caption = 'Label1'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clHighlightText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object OKBtn: TButton
+    Left = 79
+    Top = 100
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 0
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Left = 159
+    Top = 100
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+    OnClick = CancelBtnClick
+  end
+  object Edit1: TEdit
+    Left = 16
+    Top = 48
+    Width = 281
+    Height = 24
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+end

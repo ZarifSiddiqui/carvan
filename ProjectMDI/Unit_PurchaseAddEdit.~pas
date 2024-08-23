@@ -1,0 +1,337 @@
+unit Unit_PurchaseAddEdit;
+  // FormID = 4011
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Menus,
+  StdCtrls, cxButtons, cxControls, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinSilver, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
+  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, DB, MemDS, DBAccess,
+  MSAccess, dxSkinscxPCPainter, cxPC, cxDBLabel, cxCurrencyEdit, ExtCtrls;
+
+type
+  Tfrm_PurchaseAddEdit = class(TForm)
+    PCGRN: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxTabSheet3: TcxTabSheet;
+    btn_Save: TcxButton;
+    cxLabel12: TcxLabel;
+    VDate: TcxDateEdit;
+    cxLabel5: TcxLabel;
+    cxLabel11: TcxLabel;
+    cxLabel4: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel1: TcxLabel;
+    BillDate: TcxDateEdit;
+    LC_PartyAct: TcxLookupComboBox;
+    BillNo: TcxTextEdit;
+    LC_SubCost: TcxLookupComboBox;
+    Remarks: TcxTextEdit;
+    sp_Purchase_Master: TMSStoredProc;
+    sp_PurchaseMaster_AddEdit: TMSStoredProc;
+    Quantity: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    PurchaseRate: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    GrossAmt: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    LC_Item: TcxLookupComboBox;
+    cxDBLabel1: TcxDBLabel;
+    cxLabel9: TcxLabel;
+    TaxRate: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cxLabel13: TcxLabel;
+    NetAmt: TcxCurrencyEdit;
+    TaxAmt: TcxCurrencyEdit;
+    btnLineSaveAdd: TcxButton;
+    btnLineSaveClose: TcxButton;
+    sp_Purchase_Detail: TMSStoredProc;
+    sp_PurchaseDetail_AddEdit: TMSStoredProc;
+    Panel1: TPanel;
+    lbl_Seq: TcxLabel;
+    lbl_Folio: TcxLabel;
+    sp_Util_LOV_COA_04: TMSStoredProc;
+    ds_sp_Util_LOV_COA_04: TMSDataSource;
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure FormShow(Sender: TObject);
+    procedure LC_ItemExit(Sender: TObject);
+    procedure btn_SaveClick(Sender: TObject);
+    procedure btnLineSaveAddClick(Sender: TObject);
+    procedure btnLineSaveCloseClick(Sender: TObject);
+    procedure PurchaseRateEnter(Sender: TObject);
+    procedure TaxRateEnter(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure ClearForm(iOp: integer);
+    procedure OpenData(iOp: integer);
+    procedure SaveData(iOp: integer);
+    procedure Calc(iOp: integer);
+  end;
+
+var
+  frm_PurchaseAddEdit: Tfrm_PurchaseAddEdit;
+
+implementation
+uses
+  Unit_DM, DateUtils;
+{$R *.dfm}
+procedure Tfrm_PurchaseAddEdit.Calc(iOp: integer);
+begin
+  if iOp = 1 then begin
+    // Quantity
+    rReal01 := DM.IfNull(Quantity.EditValue, 0);
+    // PurchaseRate
+    rReal02 := DM.IfNull(PurchaseRate.EditValue, 0);
+    // TaxRate
+    rReal03 :=   DM.IfNull(TaxRate.EditValue, 0);
+     // Gross
+    rReal04 := (rReal01 * rReal02);
+     // TaxAmt
+    rReal05 := (rReal04  / (100) ) * rReal03 ;
+    // NetAmt
+    rReal06 :=  rReal04 +  rReal05 ;
+
+    GrossAmt.EditValue := rReal04;
+    TaxAmt.EditValue := rReal05;
+    NetAmt.EditValue := rReal06;
+
+  end;
+
+end;
+procedure Tfrm_PurchaseAddEdit.FormKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL, 0, 0);
+  end;
+end;
+
+procedure Tfrm_PurchaseAddEdit.ClearForm(iOp: integer);
+begin
+  if iOp = 0 then begin
+    VDate.EditValue := Today();
+    BillDate.EditValue := Today();
+    BillNo.EditValue := '';
+    Remarks.EditValue := '';
+    LC_PartyAct.InternalEditValue := -1;
+    LC_SubCost.InternalEditValue := -1;
+
+    VDate.SetFocus ; 
+  end;
+
+  if iOp = 1 then begin
+    LC_Item.InternalEditValue := -1 ;
+    Quantity.EditValue := 1;
+    PurchaseRate.EditValue := 0;
+    TaxRate.EditValue := 0;
+    GrossAmt.EditValue := 0;
+    TaxAmt.EditValue := 0;
+    NetAmt.EditValue := 0;
+
+      LC_Item.SetFocus;
+  end;
+end;
+
+procedure Tfrm_PurchaseAddEdit.SaveData(iOp: integer);
+begin
+
+  if iOp = 0 then begin
+    sp_PurchaseMaster_AddEdit.Close;
+
+    sp_PurchaseMaster_AddEdit.ParamByName('@CompanyCode').Value := sCompanyCode;
+    sp_PurchaseMaster_AddEdit.ParamByName('@UserID').Value := sUserName;
+    sp_PurchaseMaster_AddEdit.ParamByName('@FiscalYear').Value := sFyear;
+    sp_PurchaseMaster_AddEdit.ParamByName('@Folio').Value := lbl_Folio.EditValue;
+    sp_PurchaseMaster_AddEdit.ParamByName('@vDate').Value := VDate.EditValue;
+
+    sp_PurchaseMaster_AddEdit.ParamByName('@STaxInvDate').Value := BillDate.EditValue;
+    sp_PurchaseMaster_AddEdit.ParamByName('@PurAct').Value := '';
+    sp_PurchaseMaster_AddEdit.ParamByName('@PartyAct').Value := LC_PartyAct.InternalEditValue;
+    sp_PurchaseMaster_AddEdit.ParamByName('@AddOtherAct').Value := '';
+    sp_PurchaseMaster_AddEdit.ParamByName('@LessOtherAct').Value := '';
+    sp_PurchaseMaster_AddEdit.ParamByName('@SubCost').Value := LC_SubCost.InternalEditValue;
+    sp_PurchaseMaster_AddEdit.ParamByName('@STaxInvNo').Value := BillNo.EditValue;
+    sp_PurchaseMaster_AddEdit.ParamByName('@Remarks').Value := Remarks.EditValue;
+
+    sp_PurchaseMaster_AddEdit.ParamByName('@AddOther').Value := 0;
+    sp_PurchaseMaster_AddEdit.ParamByName('@LessOther').Value := 0;
+    sp_PurchaseMaster_AddEdit.ExecProc;
+
+     iFolio := 0;
+     iFolio := sp_PurchaseMaster_AddEdit.FieldValues['NextFolio'];
+  end;
+
+  if iOp = 1 then begin
+
+
+    if LC_Item.EditText = '' then
+    begin
+
+      LC_Item.SetFocus;
+      MessageDlg('Select Item Code', mtError, [mbOK], 0);
+      exit;
+
+    end;
+
+    sp_PurchaseDetail_AddEdit.Close;
+    sp_PurchaseDetail_AddEdit.ParamByName('@UserID').Value := sUserName;
+    sp_PurchaseDetail_AddEdit.ParamByName('@Folio').Value := lbl_Folio.EditValue;
+    sp_PurchaseDetail_AddEdit.ParamByName('@Seq').Value := lbl_Seq.EditValue;
+
+
+    sp_PurchaseDetail_AddEdit.ParamByName('@ItemID').Value := LC_Item.InternalEditValue;
+    sp_PurchaseDetail_AddEdit.ParamByName('@ProductCode').Value := LC_Item.EditText;
+    sp_PurchaseDetail_AddEdit.ParamByName('@SerialNo').Value := sVal1;
+
+
+    sp_PurchaseDetail_AddEdit.ParamByName('@Qty').Value := Quantity.EditValue;
+    sp_PurchaseDetail_AddEdit.ParamByName('@Rate').Value := PurchaseRate.EditValue;
+    sp_PurchaseDetail_AddEdit.ParamByName('@DiscPer').Value := rDiscountFixRate;
+    sp_PurchaseDetail_AddEdit.ParamByName('@DiscAmount').Value := rDicountAmount;
+    sp_PurchaseDetail_AddEdit.ParamByName('@SalesTaxPer').Value := TaxRate.EditValue;
+    sp_PurchaseDetail_AddEdit.ParamByName('@SalesTaxAmount').Value := TaxAmt.EditValue;
+
+    sp_PurchaseDetail_AddEdit.ExecProc;
+
+  
+  end;
+end;
+
+procedure Tfrm_PurchaseAddEdit.OpenData(iOp: integer);
+begin
+
+  if iOp = 0 then begin
+    sp_Purchase_Master.Close;
+    sp_Purchase_Master.ParamByName('@CompanyCode').Value := sCompanyCode;
+    sp_Purchase_Master.ParamByName('@UserID').Value := sUserName;
+    sp_Purchase_Master.ParamByName('@FiscalYear').Value := sFyear;
+    sp_Purchase_Master.ParamByName('@Folio').Value := lbl_Folio.EditValue;
+    sp_Purchase_Master.ExecProc;
+
+
+    VDate.EditValue := sp_Purchase_Master.FieldValues['RefDate'];
+    BillDate.EditValue := sp_Purchase_Master.FieldValues['STaxInvDate'];
+    BillNo.EditValue := sp_Purchase_Master.FieldValues['STaxInvNo'];
+    Remarks.EditValue := sp_Purchase_Master.FieldValues['Description'];
+    LC_PartyAct.InternalEditValue := sp_Purchase_Master.FieldValues['PartyAct'];
+    LC_SubCost.InternalEditValue := sp_Purchase_Master.FieldValues['SubCCRlxn'];
+
+  end;
+
+   if iOp = 1 then begin
+    sp_Purchase_Detail.Close;
+    sp_Purchase_Detail.ParamByName('@Folio').Value := lbl_Folio.EditValue;
+    sp_Purchase_Detail.ParamByName('@Seq').Value := lbl_Seq.EditValue;
+    sp_Purchase_Detail.ExecProc;
+
+
+    LC_Item.InternalEditValue := sp_Purchase_Detail.FieldValues['FKItemID'];
+    Quantity.EditValue := sp_Purchase_Detail.FieldValues['Qty'];
+    PurchaseRate.EditValue := sp_Purchase_Detail.FieldValues['Rate'];
+    TaxRate.EditValue := sp_Purchase_Detail.FieldValues['SalesTaxPer'];
+
+
+
+  end;
+
+     Calc(iOp);
+end;
+
+procedure Tfrm_PurchaseAddEdit.FormShow(Sender: TObject);
+begin
+
+  lbl_Folio.EditValue := iFolio;
+  lbl_Seq.EditValue := iSeq;
+
+  PCGRN.HideTabs := true;
+  PCGRN.ActivePageIndex := iControl;
+
+  ClearForm(iControl);
+
+
+  if iControl = 0 then begin // open Lov
+
+
+   Panel1.Caption := 'Purchase Voucher' ;
+    if sp_Util_LOV_COA_04.Active = False then
+      sp_Util_LOV_COA_04.Active := True;
+
+    if dm.LOV_SubCCRlxn.Active = False then
+      dm.LOV_SubCCRlxn.Active := True;
+
+  end;
+
+  if iControl = 1 then begin // open Lov
+
+     Panel1.Caption := 'Purchase Item' ;
+    if dm.Lov_Item_Stock.Active = False then
+      dm.Lov_Item_Stock.Active := True;
+
+    
+
+  end;
+
+
+  if lbl_Folio.EditValue > 0 then begin
+    OpenData(iControl);
+  end;
+
+
+
+end;
+
+procedure Tfrm_PurchaseAddEdit.LC_ItemExit(Sender: TObject);
+begin
+rUnitCost := dm.IfNull( dm.Lov_Item_Stock.FieldValues['UnitCost'],'0') ;
+sItemName :=  dm.IfNull( dm.Lov_Item_Stock.FieldValues['ModelNo'],'0') ;
+srt01 :=    dm.IfNull( dm.Lov_Item_Stock.FieldValues['UOM'],'0') ;
+srt02 :=    dm.IfNull( dm.Lov_Item_Stock.FieldValues['FKWarnCode'],'0') ;
+ 
+
+PurchaseRate.EditValue :=  rUnitCost ;
+
+end;
+
+procedure Tfrm_PurchaseAddEdit.btn_SaveClick(Sender: TObject);
+begin
+SaveData(PCGRN.ActivePageIndex);
+  ClearForm(PCGRN.ActivePageIndex);
+    Close ;
+end;
+
+procedure Tfrm_PurchaseAddEdit.btnLineSaveAddClick(Sender: TObject);
+begin
+  SaveData(PCGRN.ActivePageIndex);
+
+  ClearForm(PCGRN.ActivePageIndex);
+  LC_Item.SetFocus ;
+  lbl_Seq.EditValue := 0 ;
+end;
+
+procedure Tfrm_PurchaseAddEdit.btnLineSaveCloseClick(Sender: TObject);
+begin
+  SaveData(PCGRN.ActivePageIndex);
+
+  ClearForm(PCGRN.ActivePageIndex);
+  Close ;
+end;
+
+procedure Tfrm_PurchaseAddEdit.PurchaseRateEnter(Sender: TObject);
+begin
+Calc(PCGRN.ActivePageIndex);
+end;
+
+procedure Tfrm_PurchaseAddEdit.TaxRateEnter(Sender: TObject);
+begin
+Calc(PCGRN.ActivePageIndex);
+end;
+
+end.
+

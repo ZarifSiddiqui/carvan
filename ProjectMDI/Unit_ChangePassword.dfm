@@ -1,0 +1,154 @@
+object frm_ChangePassword: Tfrm_ChangePassword
+  Left = 462
+  Top = 211
+  BorderStyle = bsDialog
+  Caption = 'Change Password'
+  ClientHeight = 255
+  ClientWidth = 431
+  Color = 12615680
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Edit_Password: TcxMaskEdit
+    Left = 33
+    Top = 40
+    ParentFont = False
+    Properties.Alignment.Horz = taLeftJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.EchoMode = eemPassword
+    Style.LookAndFeel.Kind = lfFlat
+    Style.LookAndFeel.NativeStyle = False
+    Style.TextStyle = [fsBold]
+    StyleDisabled.LookAndFeel.Kind = lfFlat
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleFocused.BorderColor = 4227327
+    StyleFocused.BorderStyle = ebsThick
+    StyleFocused.Color = clWindow
+    StyleFocused.LookAndFeel.Kind = lfFlat
+    StyleFocused.LookAndFeel.NativeStyle = False
+    StyleFocused.TextColor = clWindowText
+    StyleFocused.TextStyle = []
+    StyleHot.LookAndFeel.Kind = lfFlat
+    StyleHot.LookAndFeel.NativeStyle = False
+    TabOrder = 0
+    Width = 280
+  end
+  object cxLabel2: TcxLabel
+    Left = 33
+    Top = 15
+    Caption = 'Current Password'
+    ParentFont = False
+    Style.TextColor = clWindow
+    Transparent = True
+  end
+  object btn_Change: TcxButton
+    Left = 257
+    Top = 211
+    Width = 73
+    Height = 30
+    Cursor = crHandPoint
+    Caption = '&Change'
+    Enabled = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 3
+    OnClick = btn_ChangeClick
+    LookAndFeel.Kind = lfFlat
+    LookAndFeel.NativeStyle = False
+  end
+  object btn_Exit: TcxButton
+    Left = 345
+    Top = 211
+    Width = 73
+    Height = 30
+    Cursor = crHandPoint
+    Caption = 'E&xit'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 4
+    OnClick = btn_ExitClick
+    LookAndFeel.Kind = lfFlat
+    LookAndFeel.NativeStyle = False
+  end
+  object cxLabel1: TcxLabel
+    Left = 33
+    Top = 71
+    Caption = 'New Password'
+    ParentFont = False
+    Style.TextColor = clWindow
+    Transparent = True
+  end
+  object New_Password: TcxMaskEdit
+    Left = 33
+    Top = 96
+    ParentFont = False
+    Properties.Alignment.Horz = taLeftJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.EchoMode = eemPassword
+    Properties.OnChange = Confirm_PasswordPropertiesChange
+    Style.LookAndFeel.Kind = lfFlat
+    Style.LookAndFeel.NativeStyle = False
+    Style.TextStyle = [fsBold]
+    StyleDisabled.LookAndFeel.Kind = lfFlat
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleFocused.BorderColor = 4227327
+    StyleFocused.BorderStyle = ebsThick
+    StyleFocused.Color = clWindow
+    StyleFocused.LookAndFeel.Kind = lfFlat
+    StyleFocused.LookAndFeel.NativeStyle = False
+    StyleFocused.TextColor = clWindowText
+    StyleFocused.TextStyle = []
+    StyleHot.LookAndFeel.Kind = lfFlat
+    StyleHot.LookAndFeel.NativeStyle = False
+    TabOrder = 1
+    Width = 280
+  end
+  object cxLabel3: TcxLabel
+    Left = 33
+    Top = 127
+    Caption = 'Confirm Password'
+    ParentFont = False
+    Style.TextColor = clWindow
+    Transparent = True
+  end
+  object Confirm_Password: TcxMaskEdit
+    Left = 33
+    Top = 152
+    ParentFont = False
+    Properties.Alignment.Horz = taLeftJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.EchoMode = eemPassword
+    Properties.OnChange = Confirm_PasswordPropertiesChange
+    Style.LookAndFeel.Kind = lfFlat
+    Style.LookAndFeel.NativeStyle = False
+    Style.TextStyle = [fsBold]
+    StyleDisabled.LookAndFeel.Kind = lfFlat
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleFocused.BorderColor = 4227327
+    StyleFocused.BorderStyle = ebsThick
+    StyleFocused.Color = clWindow
+    StyleFocused.LookAndFeel.Kind = lfFlat
+    StyleFocused.LookAndFeel.NativeStyle = False
+    StyleFocused.TextColor = clWindowText
+    StyleFocused.TextStyle = []
+    StyleHot.LookAndFeel.Kind = lfFlat
+    StyleHot.LookAndFeel.NativeStyle = False
+    TabOrder = 2
+    Width = 280
+  end
+end

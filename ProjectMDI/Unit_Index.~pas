@@ -1,0 +1,696 @@
+
+unit Unit_Index;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, Menus, StdCtrls, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, cxLabel,
+  cxDBLabel, RzStatus, RzDBStat, RzPanel, ComCtrls, dxtree, dxdbtree,
+  ToolWin, ImgList, StdActns, ActnList, cxCustomData, cxStyles, cxTL,
+  cxMaskEdit, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxDBTL, cxTLData,
+  dxGDIPlusClasses, RzBckgnd, DB, cxButtons, cxClasses, dxBar, cxTextEdit,
+  cxDropDownEdit, cxCalendar, cxDBEdit, Unit_FramFatch, cxCheckBox, Grids,
+  DBGrids, dxSkinsCore, dxSkinSilver, dxSkinsdxBarPainter;
+
+type
+  Tfrm_Index = class(TForm)
+    Panel1: TPanel;
+    MainMenu1: TMainMenu;
+    Menu1: TMenuItem;
+    Btn_Open: TButton;
+    btn_KeyEsc: TButton;
+    Button2: TButton;
+    RzStatusBar1: TRzStatusBar;
+    ActionList1: TActionList;
+    FileNew1: TAction;
+    FileOpen1: TAction;
+    FileClose1: TWindowClose;
+    FileSave1: TAction;
+    FileSaveAs1: TAction;
+    FileExit1: TAction;
+    EditCut1: TEditCut;
+    EditCopy1: TEditCopy;
+    EditPaste1: TEditPaste;
+    WindowCascade1: TWindowCascade;
+    WindowTileHorizontal1: TWindowTileHorizontal;
+    WindowTileVertical1: TWindowTileVertical;
+    WindowMinimizeAll1: TWindowMinimizeAll;
+    WindowArrangeAll1: TWindowArrange;
+    HelpAbout1: TAction;
+    ImageList1: TImageList;
+    Action1: TAction;
+    RzStatusPane_Year: TRzStatusPane;
+    RzStatusPane_User: TRzStatusPane;
+    RzStatusPane_Location: TRzStatusPane;
+    cxDBTreeList1: TcxDBTreeList;
+    Tree_DisplayName: TcxDBTreeListColumn;
+    Tree_frmName: TcxDBTreeListColumn;
+    Tree_FormID: TcxDBTreeListColumn;
+    tree_tblMaster: TcxDBTreeListColumn;
+    tree_tblDetail: TcxDBTreeListColumn;
+    tree_PKColoName: TcxDBTreeListColumn;
+    tree_AddRights: TcxDBTreeListColumn;
+    tree_EditRights: TcxDBTreeListColumn;
+    tree_DeleteRights: TcxDBTreeListColumn;
+    tree_DeleteLineRights: TcxDBTreeListColumn;
+    RzPanel1: TRzPanel;
+    btn_InderiectOpen: TButton;
+    btn_Login: TButton;
+    Button3: TButton;
+    WindowClose1: TWindowClose;
+    Splitter1: TSplitter;
+    AdminAction1: TMenuItem;
+    PowerPlay1: TMenuItem;
+    UserLog1: TMenuItem;
+    Windows: TMenuItem;
+    ArrangeAll1: TMenuItem;
+    Cascade1: TMenuItem;
+    ileHorizontally1: TMenuItem;
+    ileVertically1: TMenuItem;
+    MinimizeAll1: TMenuItem;
+    Close1: TMenuItem;
+    tree_ChangeDateRight: TcxDBTreeListColumn;
+    tree_EditAmountRights: TcxDBTreeListColumn;
+    FiscalFrom: TcxDBDateEdit;
+    FiscalUpTo: TcxDBDateEdit;
+    RzDBStatusPane1: TRzDBStatusPane;
+    FatchTripInvoices1: TMenuItem;
+    RzKeyStatus1: TRzKeyStatus;
+    ChangePassword1: TMenuItem;
+    Login: TMenuItem;
+    Panel2: TPanel;
+    BackUpXLS: TMenuItem;
+    Dashboard1: TMenuItem;
+    UnlockVoucher1: TMenuItem;
+    procedure FormShow(Sender: TObject);
+    procedure Btn_OpenClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Menu1Click(Sender: TObject);
+    procedure cxDBTreeList1Click(Sender: TObject);
+    procedure btn_InderiectOpenClick(Sender: TObject);
+    procedure cxDBTreeList1KeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure PowerPlay1Click(Sender: TObject);
+    procedure UserLog1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FatchTripInvoices1Click(Sender: TObject);
+    procedure ChangePassword1Click(Sender: TObject);
+    procedure Frame11Button1Click(Sender: TObject);
+    procedure LoginClick(Sender: TObject);
+    procedure BackUpXLSClick(Sender: TObject);
+    procedure Dashboard1Click(Sender: TObject);
+    procedure UnlockVoucher1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+
+  end;
+
+var
+  frm_Index: Tfrm_Index;
+
+  BForm: TForm;
+
+implementation
+uses
+  //Unit_RegDesk,
+  Unit_FreightRate,
+  uSPOT_LIST,
+  uTyreAllocation,
+  uTyreAttribute,
+  uVRNProfile,
+  uVRNDOC,
+  uRTSVRN_ATT,
+  uRTSDVR_Assesment,
+  uRTSDVR_Training,
+  uRTSDVR_Voilation,
+  uRTSDVR_Medical,
+  uRTSDVR_License,
+  uRTS_attribute , 
+  uDriverManager,
+  Unit_StockAdj ,
+  Unit_DM,
+  Unit_PaymentReconNew ,
+  Unit_CompanyBillNew ,
+  Unit_AccountVoucher,
+  Unit_SalesNew,
+  Unit_Login,
+  Unit_SalesReceipt,
+  Unit_Child,
+  Unit_BookEntry,
+  Unit_COA,
+  Unit_AccReport,
+  Unit_MasterProfile,
+  Unit_Contract,
+  Unit_Trip,
+  Unit_SMSCaster,
+  Unit_Ledger,
+  Unit_PowerPlay,
+  Unit_Password,
+  Unit_OpeningBalance,
+  //Unit_ContractorBilling,
+  Unit_TripReconNew,
+  Unit_TripReconcile,
+  Unit_ActivityMonitor,
+  Unit_BalanceSheet,
+  Unit_Product,
+  Unit_PurchaseBill,
+  Unit_SalesBill,
+ // Unit_InventoryItem,
+  Unit_Estimate,
+  Unit_Location,
+  Unit_City,
+  Unit_CompanyBill,
+  Unit_PaymentRecon,
+  Unit_UserLog,
+  Unit_Vehicle,
+  Unit_Notes,
+  Unit_CostCentre,
+  Unit_Setup,
+  Unit_Shortage,
+  Unit_ClubCard,
+  Unit_ChangePassword,
+  Unit_TestUnit,
+  Unit_RTS_Vehicle,
+  Unit_RTS_Driver,
+  Unit_RTS_DashBoard,
+  Unit_Fin_DashBoard,
+  Unit_StockReport,
+  Unit_BankRecon,
+  Unit_dbSelect, Unit_KPI, Unit_CashBook , Unit_BankBook,Unit_ProductInfo, Unit_BckXLS , Unit_Trip2,
+  Unit_ClientIndex, Unit_TripNew,Unit_PurchaseNew, uUnlockVoucher;
+
+{$R *.dfm}
+
+procedure Tfrm_Index.FormShow(Sender: TObject);
+begin
+
+  //FormPower.btn_ReadAddressClick(nil);
+
+  //sComputerName := sHostName;
+  //sNetWorkIP := sIP;
+
+  Panel1.Caption := DM.MSConnection.ConnectString;
+
+  cxDBTreeList1.Width := 1;
+   
+  if sDBmode = 'Live' then begin
+  Form_dbSelect.ShowModal;
+   DM.OpenDB(sDBSelect);
+   FatchTripInvoices1.Visible := True ;
+    Dashboard1.Visible := True ;
+  end else if sDBmode = 'local' then begin
+    DM.OpenDB(sMyConn);
+    FatchTripInvoices1.Visible := False ;
+    Dashboard1.Visible := False ;
+    bYearOpen := true ;
+
+  end;
+
+  frm_Login.ShowModal;
+
+  {if FileExists('Cover.png') then
+  begin
+    RzBackground1.Image.LoadFromFile('Cover.png');
+  end; }
+  {dm.qDefaults.Close;
+  dm.qDefaults.ParamByName('CoID').Value := sCompanyCode;
+  dm.qDefaults.Open;}
+
+  if Length(sUserName) > 0 then begin
+    dm.tblDefaults.Close;
+    dm.tblDefaults.Filter := 'CompanyID = ' + QuotedStr(sCompanyCode);
+    dm.tblDefaults.Filtered := True;
+  // dm.tblDefaults.ParamByName('CoID').Value := sCompanyCode ;
+    dm.tblDefaults.Open;
+    sSoftwareTitle := dm.tblDefaults.FieldByName('SoftwareTitle').Value;
+
+  //sSMSString,sSMSLogin ,sSMSPass,sSMSMask,sSMSURL,
+    sSMSURL := DM.tblDefaults.FieldValues['SMS_url'];
+  //'http://www.outreach.pk/api/sendsms.php/sendsms/url'  ;
+    sSMSLogin := DM.tblDefaults.FieldValues['SMS_login'];
+    sSMSPass := DM.tblDefaults.FieldValues['SMS_password'];
+    sSMSMask := DM.tblDefaults.FieldValues['SMS_Mask'];
+    sSMSNumber := '923333509698';
+    sSMSString := '';
+
+    dm.sp_UserLogin.Close;
+    dm.sp_UserLogin.ParamByName('@sUserID').Value := sUserName;
+    dm.sp_UserLogin.ParamByName('@sCoID').Value := sCompanyCode;
+    dm.sp_UserLogin.ParamByName('@Option').Value := 1;
+    dm.sp_UserLogin.ExecProc;
+
+    if sUserType = 'A' then
+      AdminAction1.Enabled := True
+    else
+      AdminAction1.Enabled := False;
+
+    srt01 := sUserType + ' | ' + sUserName + ' | ' + sUserFullName;
+    RzStatusPane_User.Caption := srt01;
+    RzStatusPane_Year.Caption := sFyear;
+    RzStatusPane_Location.Caption := sSoftwareTitle;
+    cxDBTreeList1.Width := 226;
+
+    sSMSString := sSoftwareTitle + '|' + srt01;
+
+      dFYearFrom := FiscalFrom.Date;
+    dFYearTo := FiscalUpTo.Date;
+    
+   {try
+      frm_Kpi.FormStyle := fsMDIChild;
+      frm_Kpi.BorderStyle := bsNone;
+      frm_Kpi.WindowState := wsMaximized;
+      dm.DocStat;
+      frm_Kpi.Show;
+    except
+    end; }
+
+  end;
+
+end;
+
+procedure Tfrm_Index.Btn_OpenClick(Sender: TObject);
+begin
+
+  BForm := Tfrm_Child.Create(Self);
+  BForm.Caption := 'ERP\' + sFileName;
+  //BForm.Show;
+end;
+
+procedure Tfrm_Index.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+
+  sVoice := 'Are you sure want to close?';
+  // Form_Test.Edit1.Text := sVoice ;
+  //Form_Test.btn_TalkClick(nil);
+
+  //Form_Test.StartBeeping;
+
+  if MessageDlg(
+    sVoice,
+    mtConfirmation,
+    [mbYes, mbNo],
+    0) = mrNo then
+    CanClose := False
+  else begin
+    CanClose := True;
+ 
+    sRefNo := '' ;
+    iFolio := 0 ; 
+    end;
+
+
+end;
+
+procedure Tfrm_Index.Menu1Click(Sender: TObject);
+begin
+//  cxDBTreeList1.DataController.DataSet.First ;
+  if cxDBTreeList1.Width = 1 then
+  begin
+    //cxDBTreeList1.DataController.DataSet.Refresh;
+
+    cxDBTreeList1.Width := 226;
+  end
+  else
+    cxDBTreeList1.Width := 1;
+end;
+
+procedure Tfrm_Index.cxDBTreeList1Click(Sender: TObject);
+begin
+
+  sConnstr_Thru := '';
+
+  sFormType := '';
+  sFileName := '';
+  sMasterTbl := '';
+  sDetailTbl := '';
+
+  sMapFields := '';
+  iFormID := 0;
+  //iDoc_Filter := 0 ;
+  //sRefNo := '' ;
+  iFormID := Tree_FormID.Value;
+
+  if iFormID > 0 then
+  begin
+
+    sConnstr_Thru := sConnstr;
+    Dm.UserFormPrefrence(sUserName,iFormID);
+     sFormType := Tree_frmName.Value;
+    sFileName := Tree_DisplayName.Value;
+    sMasterTbl := tree_tblMaster.Value;
+    sDetailTbl := tree_tblDetail.Value;
+    sMapFields := tree_PKColoName.Value;
+
+    // ShowMessage( IntToStr(iFormID) + ': ' + sMasterTbl + ' : ' + sDetailTbl + ' : ' + sFormType + ' : ' + sFileName);
+     // asign rights as per Fyear and user
+
+       /// check if db read only
+
+     if bYearOpen = True then begin
+
+    bRightAdd := tree_AddRights.Value;
+      bRightEdit := tree_EditRights.Value;
+      bRightDelete := tree_DeleteRights.Value;
+      bRightDeleteLine := tree_DeleteLineRights.Value;
+      bRightChangeDate := tree_ChangeDateRight.Value;
+      bRightEditAdvance := tree_EditAmountRights.Value;
+    end else 
+    if bYearOpen = False then begin
+
+      bRightAdd := bYearOpen;
+      bRightEdit := bYearOpen;
+      bRightDelete := bYearOpen;
+      bRightDeleteLine := bYearOpen;
+      bRightChangeDate := bYearOpen;
+      bRightEditAdvance := bYearOpen;
+
+
+    end;
+
+    dFYearFrom := FiscalFrom.Date;
+    dFYearTo := FiscalUpTo.Date;
+
+
+    DM.sp_UserLogin.First;
+
+   // cxDBTreeList1.Width := 1;
+    if sFormType = 'frm_Tyre_Attribute' then
+      BForm := Tfrm_Tyre_Attribute.Create(Self)
+    else
+     if sFormType = 'frm_Tyre_Allocation' then
+      BForm := Tfrm_Tyre_Allocation.Create(Self)
+    else
+    if sFormType = 'frm_BookEntry' then
+      BForm := Tfrm_BookEntry.Create(Self)
+    else if sFormType = 'frm_CashBook' then
+      BForm := Tfrm_CashBook.Create(Self)
+     else if sFormType = 'frm_BankBook' then
+      BForm := Tfrm_BankBook.Create(Self)
+    else if sFormType = 'frm_COA' then
+      BForm := Tfrm_COA.Create(Self)
+    else if sFormType = 'frm_MasterProfile' then
+      BForm := Tfrm_MasterProfile.Create(Self)
+    else if sFormType = 'frm_Contract' then
+      BForm := Tfrm_Contract.Create(Self)
+    else if sFormType = 'frm_Trip' then
+      BForm := Tfrm_Trip.Create(Self)
+    else if sFormType = 'frm_AccountVoucher' then
+      BForm := Tfrm_AccountVoucher.Create(Self)
+
+    else if sFormType = 'frm_TripNew' then
+      BForm := Tfrm_TripNew.Create(Self)
+     else if sFormType = 'frm_PaymentReconNew' then
+      BForm := Tfrm_PaymentReconNew.Create(Self)
+
+    else if sFormType = 'frm_AccountReport' then
+      BForm := Tfrm_AccountReport.Create(Self)
+    else if sFormType = 'frm_Ledger' then
+      BForm := Tfrm_Ledger.Create(Self)
+    else if sFormType = 'frm_OpeningBalance' then
+      BForm := Tfrm_OpeningBalance.Create(Self)
+    else if sFormType = 'frm_PaymentRecon' then
+      BForm := Tfrm_PaymentRecon.Create(Self)
+    else if sFormType = 'frm_BalanceSheet' then
+      BForm := Tfrm_BalanceSheet.Create(Self)
+    else if sFormType = 'frm_TripReconcile' then
+      BForm := Tfrm_TripReconcile.Create(Self)
+      else if sFormType = 'frm_TripReconNew' then
+      BForm := Tfrm_TripReconNew.Create(Self)
+    else if sFormType = 'frm_Product' then
+      BForm := Tfrm_Product.Create(Self)
+    else if sFormType = 'frm_SalesBill' then
+      BForm := Tfrm_SalesBill.Create(Self)
+     else if sFormType = 'frm_SalesBillNew' then
+      BForm := Tfrm_SalesBillNew.Create(Self)
+
+     else if sFormType = 'frm_ClientIndex' then
+      BForm := Tfrm_ClientIndex.Create(Self)
+   // else if sFormType = 'frm_InventoryItem' then
+     // BForm := Tfrm_ItemStock.Create(Self)
+
+
+    else if sFormType = 'frm_RTS_Driver' then
+      BForm := Tfrm_RTS_Driver.Create(Self)
+
+    else if sFormType = 'frm_RTS_Vehicle' then
+      BForm := Tfrm_RTS_Vechile.Create(Self)
+
+    else if sFormType = 'frm_RTS_DashBoard' then
+      BForm := Tfrm_RTS_DashBoard.Create(Self)
+    else if sFormType = 'frm_StockReport' then
+      BForm := Tfrm_StockReport.Create(Self)
+
+    else if sFormType = 'frm_PurchaseBill' then
+      BForm := Tfrm_PurchaseBill.Create(Self)
+
+    else if sFormType = 'frm_PurchaseNew' then
+      BForm := Tfrm_PurchaseNew.Create(Self)
+
+        else if sFormType = 'frm_StockAdj' then
+      BForm := Tfrm_StockAdj.Create(Self)
+
+    else if sFormType = 'frm_Estimate' then
+      BForm := Tfrm_Estimate.Create(Self)
+    else if sFormType = 'frm_Location' then
+      BForm := Tfrm_Location.Create(Self)
+    else if sFormType = 'frm_City' then
+      BForm := Tfrm_City.Create(Self)
+    else if sFormType = 'frm_CompanyBill' then
+      BForm := Tfrm_CompanyBill.Create(Self)
+        else if sFormType = 'frm_CompanyBillNew' then
+      BForm := Tfrm_CompanyBillNew.Create(Self)
+    else if sFormType = 'frm_Vehicle' then
+      BForm := Tfrm_Vehicle.Create(Self)
+    else if sFormType = 'frm_Notes' then
+      BForm := Tfrm_Notes.Create(Self)
+    else if sFormType = 'frm_CostCentre' then
+      BForm := Tfrm_CostCentre.Create(Self)
+    else if sFormType = 'frm_Setup' then
+      BForm := Tfrm_Setup.Create(Self)
+    else if sFormType = 'frm_ClubCard' then
+      BForm := Tfrm_ClubCard.Create(Self)
+    else if sFormType = 'frm_Shortage' then
+      BForm := Tfrm_Shortage.Create(Self)
+    else if sFormType = 'frm_Notes' then
+      BForm := Tfrm_Notes.Create(Self)
+    else if sFormType = 'frm_Notes' then
+      BForm := Tfrm_Notes.Create(Self)
+    else if sFormType = 'frm_BankRecon' then
+      BForm := Tfrm_BankRecon.Create(Self)
+    else if sFormType = 'frm_ActivityMonitor' then
+      BForm := Tfrm_ActivityMonitor.Create(Self)
+       else if sFormType = 'frm_ProductInfo' then
+      BForm := Tfrm_ProductInfo.Create(Self)
+      else if sFormType = 'frm_DriverManager' then
+      BForm := Tfrm_DriverManager.Create(Self)
+       else if sFormType = 'frm_RTS_Attribute' then
+      BForm := Tfrm_RTS_Attribute.Create(Self)
+       else if sFormType = 'frm_DriverViolation' then
+      BForm := Tfrm_DriverViolation.Create(Self)
+       else if sFormType = 'frm_DriverMedical' then
+      BForm := Tfrm_DriverMedical.Create(Self)
+      else if sFormType = 'frm_DriverTraining' then
+      BForm := Tfrm_DriverTraining.Create(Self)
+      else if sFormType = 'frm_DriverLicense' then
+      BForm := Tfrm_DriverLicense.Create(Self)
+      else if sFormType = 'frm_DriverAssesment' then
+      BForm := Tfrm_DriverAssesment.Create(Self)
+       else if sFormType = 'frm_VRN_Attribute' then
+      BForm := Tfrm_VRN_Attribute.Create(Self)
+       else if sFormType = 'frm_VRN_DOC' then
+      BForm := Tfrm_VRN_DOC.Create(Self)
+      else if sFormType = 'frm_VRN_Pofile' then
+      BForm := Tfrm_VRN_Pofile.Create(Self)
+       else if sFormType = 'frm_SpotList' then
+      BForm := Tfrm_SpotList.Create(Self)
+      else if sFormType = 'frm_FreightRate' then
+      BForm := Tfrm_FreightRate.Create(Self);
+
+    BForm.FormStyle := fsMDIChild;
+    // BForm.FormStyle := fsNormal;  // if sdi
+    BForm.OnCloseQuery := frm_Index.OnCloseQuery;
+    BForm.OnClose := frm_Index.OnClose;
+    BForm.OnKeyPress := frm_Index.OnKeyPress ;
+    // if sdi
+    // BForm.WindowState := wsMaximized;
+     //BForm.Height := frm_Index.Height - 26 ;
+    // BForm.Width :=  frm_Index.Width - 26 ;
+    
+    BForm.Caption := sCompanyAbbr + '\' + sFileName + '( ' + IntToStr(iFormID) + ' )';
+    BForm.Icon := frm_Index.Icon;
+    BForm.Position := poScreenCenter ;
+    BForm.Left := 112;
+    BForm.Show;
+    //BForm.ShowModal;    // if sdi
+    BForm.FreeOnRelease;
+  end;
+end;
+
+procedure Tfrm_Index.btn_InderiectOpenClick(Sender: TObject);
+begin
+  DM.sp_UserLogin.First;
+  DM.sp_UserLogin.Locate('FormID', iFormID, [loCaseInsensitive]);
+  cxDBTreeList1Click(nil);
+end;
+
+procedure Tfrm_Index.cxDBTreeList1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+
+    cxDBTreeList1Click(nil);
+  end;
+
+end;
+
+procedure Tfrm_Index.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure Tfrm_Index.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    Key := #0;
+    Perform(WM_NEXTDLGCTL, 0, 0);
+
+  end;
+  {if (Key = #27) then
+  begin
+    Close;
+  end;}
+end;
+
+procedure Tfrm_Index.PowerPlay1Click(Sender: TObject);
+begin
+
+  if not Assigned(frm_PowerPlay) then
+    frm_PowerPlay := Tfrm_PowerPlay.Create(Application);
+
+  frm_PowerPlay.ShowModal;
+
+  { sPassword := '0';
+
+   PasswordDlg.ShowModal;
+
+   if sPassword = '9200' then
+   begin
+
+     if not Assigned(frm_PowerPlay) then
+       frm_PowerPlay := Tfrm_PowerPlay.Create(Application);
+
+     frm_PowerPlay.ShowModal;
+   end;}
+end;
+
+procedure Tfrm_Index.UserLog1Click(Sender: TObject);
+begin
+  sPassword := '0';
+
+  //PasswordDlg.ShowModal;
+
+ //if sPassword = '9200' then
+  //begin
+
+  if not Assigned(frm_DBLog) then
+    frm_DBLog := Tfrm_DBLog.Create(Application);
+
+  frm_DBLog.ShowModal;
+  //end;
+end;
+
+procedure Tfrm_Index.FormCreate(Sender: TObject);
+var
+  MyBitmap: TBitmap;
+begin
+
+  if FileExists('cover.bmp') then
+  begin
+    MyBitmap := TBitmap.Create;
+    MyBitmap.LoadFromFile('cover.bmp');
+    frm_Index.Brush.Bitmap := MyBitmap;
+  end;
+
+end;
+
+procedure Tfrm_Index.FatchTripInvoices1Click(Sender: TObject);
+begin
+ { if Frame11.Visible = false then
+    Frame11.Visible := True
+  else
+    Frame11.Visible := false; }
+end;
+
+procedure Tfrm_Index.ChangePassword1Click(Sender: TObject);
+begin
+  if MessageDlg(
+    'Are you sure want to Change your password ?',
+    mtConfirmation,
+    [mbYes, mbNo],
+    0) = mrYes then
+  begin
+    frm_ChangePassword.ShowModal;
+
+  end;
+end;
+
+procedure Tfrm_Index.Frame11Button1Click(Sender: TObject);
+begin
+  //Frame11.Button1Click(Sender);
+
+end;
+
+procedure Tfrm_Index.LoginClick(Sender: TObject);
+begin
+  //frm_Login.ShowModal ;
+
+
+
+{  if not Assigned(frm_SalesReceipt) then
+    frm_SalesReceipt := Tfrm_SalesReceipt.Create(Application);
+
+  frm_SalesReceipt.ShowModal;   }
+
+  if not Assigned(frm_TripNew) then
+    frm_TripNew := Tfrm_TripNew.Create(Application);
+
+  frm_TripNew.ShowModal;
+end;
+
+
+
+procedure Tfrm_Index.BackUpXLSClick(Sender: TObject);
+begin
+     if not Assigned(frm_BakcupXLS) then
+    frm_BakcupXLS := Tfrm_BakcupXLS.Create(Application);
+
+  frm_BakcupXLS.ShowModal;
+end;
+
+procedure Tfrm_Index.Dashboard1Click(Sender: TObject);
+begin
+      if not Assigned(frm_Fin_DashBoard) then
+    frm_Fin_DashBoard := Tfrm_Fin_DashBoard.Create(Application);
+
+  frm_Fin_DashBoard.ShowModal;
+end;
+
+procedure Tfrm_Index.UnlockVoucher1Click(Sender: TObject);
+begin
+
+    if not Assigned(frm_UnlockVoucher) then
+    frm_UnlockVoucher := Tfrm_UnlockVoucher.Create(Application);
+
+  frm_UnlockVoucher.ShowModal;
+
+
+end;
+
+end.
+
